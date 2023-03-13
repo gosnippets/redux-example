@@ -1,27 +1,37 @@
-import logo from './logo.svg';
 import './App.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addition, subtraction } from './redux/operationSlice';
+import { getAllUser } from './redux/operationSlice';
 
 function App() {
   const [inputValue, setInputValue] = useState("")
-  const total = useSelector((state)=>state.operation.total)
+  const [inputValue2, setInputValue2] = useState("")
 
-  const dispatch= useDispatch();
+  const { total, usersList, status, error } = useSelector((state) => state.operation)
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllUser())
+  }, [])
+
+  useEffect(() => {
+    console.log("operationState", total, usersList, status, error)
+  }, [total, usersList, status, error])
 
   const handleSum = () => {
-    console.log("HandleSum", inputValue)
-    dispatch(addition(inputValue))
+    console.log("HandleSum", inputValue, inputValue2)
+    // dispatch(addition({ a: inputValue, b: inputValue2 }))
   }
   const handleSub = () => {
     console.log("HandleSub", inputValue)
-    dispatch(subtraction(inputValue))
+    // dispatch(subtraction(inputValue))
   }
   return (
     <div className="App">
       <h2>Total = {total}</h2>
-      <input type="number" placeholder='Please enter number' onChange={(event) => setInputValue(Number(event.target.value))} />
+      <input type="number" placeholder='Please enter number1' onChange={(event) => setInputValue(Number(event.target.value))} />
+      <input type="number" placeholder='Please enter number2' onChange={(event) => setInputValue2(Number(event.target.value))} />
       <br /><br />
       <button onClick={handleSum}>Add</button>
       <button onClick={handleSub}>Subtract</button>
