@@ -2,6 +2,7 @@ import './App.css';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllUser } from './redux/operationSlice';
+import FormValidation from './components/FormValidation';
 
 function App() {
   const [inputValue, setInputValue] = useState("")
@@ -29,6 +30,7 @@ function App() {
   }
   return (
     <div className="App">
+      <FormValidation /><br/><br/>
       <h2>Total = {total}</h2>
       <input type="number" placeholder='Please enter number1' onChange={(event) => setInputValue(Number(event.target.value))} />
       <input type="number" placeholder='Please enter number2' onChange={(event) => setInputValue2(Number(event.target.value))} />
