@@ -1,19 +1,18 @@
 import { useFormik } from 'formik'
-import React, { useState } from 'react'
+import React from 'react'
 import * as Yup from 'yup'
+import { AGE_REQUIRED, USERMAX, USERMIN, USER_REQUIRED } from '../constants/Constants'
 
 const initialValues = { username: "", age: "", email: "", approver: "user" }
 
 const schema = Yup.object().shape({
-    username: Yup.string().required("Username is required!").min(5, "More than 5 character is required!").max(10, "Less than 10 character is required!"),
-    age: Yup.number().required("Age is required!"),
+    username: Yup.string().required(USER_REQUIRED).min(5, USERMIN).max(10, USERMAX),
+    age: Yup.number().required(AGE_REQUIRED),
     approver: Yup.string().required(),
-    email: Yup.string().required()
-    // email: Yup.string().when("approver", {
-    //     is: (approver) => approver === "admin",
-    //     then: Yup.string().required(),
-    //     otherwise: Yup.string().optional()
-    // })
+    // email: Yup.string().required().email()
+    email: Yup.string().when("approver", (approver, schema) => {
+        return approver === 'admin' ? schema.required("Must enter email address") : schema
+    })
 })
 
 export default function FormValidation() {
@@ -41,23 +40,23 @@ export default function FormValidation() {
                     <input type="number" placeholder='Enter Age' name="age" value={formik.values.age} onChange={formik.handleChange} /><br />
                     <small className='error'>{formik.errors.age}</small>
                 </div>
-                <div>
+                {formik.values.approver === "admin" && (<div>
                     <input type="email" placeholder='Enter Email' name="email" value={formik.values.email} onChange={formik.handleChange} /><br />
                     <small className='error'>{formik.errors.email}</small>
-                </div>
+                </div>)}
                 <div>
                     <select name="approver" value={formik.values.approver} onChange={formik.handleChange}>
                         <option value="user">User</option>
                         <option value="admin">Admin</option>
-                    </select><br/>
+                    </select><br />
                     <small className='error'>{formik.errors.approver}</small>
                 </div>
 
                 <div>
-                    <button type="submit" disabled={!formik.isValid}>Submit</button>
+                    <button type="submit" disabled={!(formik.isValid && formik.dirty)}>Submit</button>
                 </div>
 
-                <button onClick={showFormikData}>Show Data</button>
+                <button onClick={showFormikData} >Show Data</button>
             </form>
         </div>
     )

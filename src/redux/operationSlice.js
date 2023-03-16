@@ -1,13 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { BASEURL } from "../constants/Constants";
 
 export const getAllUser = createAsyncThunk("users/getAllUsers", async () => {
-    const res = await axios.get("https://jsonplaceholder.typicode.com/users")
+    const res = await axios.get(BASEURL + "/users")
     return res.data
 })
 
 export const getSingleUser = createAsyncThunk("users/getAllUsers", async (id) => {
-    const res = await axios.get("https://jsonplaceholder.typicode.com/users"+id)
+    const res = await axios.get(BASEURL + "/users" + id)
     return res.data
 })
 
